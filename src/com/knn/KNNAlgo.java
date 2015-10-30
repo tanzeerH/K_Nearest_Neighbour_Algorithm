@@ -5,6 +5,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 
+import org.omg.CORBA.FREE_MEM;
+import org.omg.CORBA.IDLTypeOperations;
+
 public class KNNAlgo {
 
 	/*
@@ -24,9 +27,12 @@ public class KNNAlgo {
 	private ArrayList<HashMap<String, Integer>> test_hashList;
 	private ArrayList<ArrayList<String>> test_docWordList;
 	private ArrayList<String> test_docTopicList;
-	
-	private int corect_hamming=0;
-	private int corect_euclid=0;
+
+	private HashMap<String, ArrayList<Integer>> wordMap;
+
+	private int corect_hamming = 0;
+	private int corect_euclid = 0;
+	private int corect_cosine = 0;
 
 	public KNNAlgo() {
 
@@ -43,6 +49,8 @@ public class KNNAlgo {
 		train_docWordList = train.getDocWordList();
 		train_docTopicList = train.getDocTopicList();
 
+		wordMap = train.getWordMap();
+
 		test_hashList = test.getHashList();
 		test_docWordList = test.getDocWordList();
 		test_docTopicList = test.getDocTopicList();
@@ -57,18 +65,46 @@ public class KNNAlgo {
 
 				int words = test_docWordList.get(docIndex).size();
 				int dis_hamming = 0;
-				int dis_euclidian=0;
+				int dis_euclidian = 0;
+				double dot_product = 0;
+				double vector_x_sum = 0;
+				double vector_y_sum = 0;
 				for (int i = 0; i < words; i++) {
 					String key = test_docWordList.get(docIndex).get(i);
-					int occur=test_hashList.get(docIndex).get(key);
+					int occur = test_hashList.get(docIndex).get(key);
+
+					// calculating TF_IDF
+					double TF = (double) occur
+							/ (double) test_docWordList.get(docIndex).size();
+					double D = train_docWordList.size() + 1;
+					double cw = 1;
+					if (wordMap.containsKey(key))
+						cw += wordMap.get(key).size();
+					double IDF = get2baseLog(D / cw);
+
+					double TF_IDF = TF * IDF;
+
+					vector_x_sum += TF_IDF * TF_IDF;
 
 					if (train_hashList.get(t_doc).containsKey(key)) {
-						int frq=train_hashList.get(t_doc).get(key);
-						dis_euclidian+=Math.pow((occur-frq), 2);
-					} else
-					{
+						int frq = train_hashList.get(t_doc).get(key);
+						dis_euclidian += Math.pow((occur - frq), 2);
+
+						double _TF = (double) frq
+								/ (double) train_docWordList.get(t_doc).size();
+						double _D = test_docWordList.size();
+						double _cw = 1;
+						if (wordMap.containsKey(key))
+							_cw += wordMap.get(key).size();
+						double _IDF = get2baseLog(_D / _cw);
+
+						double _TF_IDF = _TF * _IDF;
+						dot_product += TF_IDF * _TF_IDF;
+
+					} else {
 						dis_hamming++;
-						dis_euclidian+=Math.pow(occur, 2);
+						dis_euclidian += Math.pow(occur, 2);
+
 					}
 				}
 
@@ -76,40 +112,75 @@ public class KNNAlgo {
 
 				for (int i = 0; i < words; i++) {
 					String key = train_docWordList.get(t_doc).get(i);
-					int occur=train_hashList.get(t_doc).get(key);
+					int occur = train_hashList.get(t_doc).get(key);
+
+					double TF = (double) occur
+							/ (double) train_docWordList.get(t_doc).size();
+
+					double IDF;
+					double TF_IDF;
+
 					if (test_hashList.get(docIndex).containsKey(key)) {
-						int frq=test_hashList.get(docIndex).get(key);
-						dis_euclidian+=Math.pow((occur-frq), 2);
-					} else
-					{
+						// int frq=test_hashList.get(docIndex).get(key);
+						// dis_euclidian+=Math.pow((occur-frq), 2);
+						double D = train_docWordList.size() + 1;
+						double cw = 1;
+						if (wordMap.containsKey(key))
+							cw += wordMap.get(key).size();
+						IDF = get2baseLog(D / cw);
+						TF_IDF = TF * IDF;
+					} else {
 						dis_hamming++;
-						dis_euclidian+=Math.pow(occur, 2);
+						dis_euclidian += Math.pow(occur, 2);
+
+						double D = train_docWordList.size();
+						double cw = 0;
+						if (wordMap.containsKey(key))
+							cw += wordMap.get(key).size();
+						IDF = get2baseLog(D / cw);
+						TF_IDF = TF * IDF;
 					}
+					vector_y_sum += TF_IDF * TF_IDF;
 				}
 
 				// System.out.println("dstance: "+ dis+"  doc: "+
 				// docTopicList_train.get(t_doc));
+				double dis_cosine=dot_product/(Math.sqrt(vector_x_sum)*Math.sqrt(vector_y_sum));
 				Distance distance = new Distance(train_docTopicList.get(t_doc),
-						dis_hamming,dis_euclidian);
+						dis_hamming, dis_euclidian,dis_cosine);
 				disList.add(distance);
 
 			}
-			//Collections.sort(disList, new DistanceComparatorByHamming());
+			 Collections.sort(disList, new DistanceComparatorByHamming());
 
-			//getClassTypeByHamming(disList, test_docTopicList.get(docIndex));
-			
+			 getClassTypeByHamming(disList, test_docTopicList.get(docIndex));
+
 			Collections.sort(disList, new DistanceComparatorByEuclidian());
 
 			getClassTypeByEuclid(disList, test_docTopicList.get(docIndex));
 			
+			Collections.sort(disList, new DistanceComparatorByCosine());
 
-			
+			getClassTypeByCosine(disList, test_docTopicList.get(docIndex));
 
 		}
-		//System.out.println("Cooerct Hamming: "+corect_hamming+"  total: "+ test_docTopicList.size());
-		
-		System.out.println("Cooerct Euclidian: "+corect_euclid+"  total: "+ test_docTopicList.size());
+		 System.out.println("Cooerct Hamming: "+corect_hamming+"  total: "+
+		test_docTopicList.size());
 
+		System.out.println("Cooerct Euclidian: " + corect_euclid + "  total: "
+				+ test_docTopicList.size());
+		
+		System.out.println("Cooerct cosine: " + corect_cosine + "  total: "
+				+ test_docTopicList.size());
+
+	}
+
+	private double get2baseLog(double value) {
+		if (value == 0)
+			return 0;
+		double logs = Math.log(value) / Math.log(2);
+		// System.out.println("2base log"+ logs+" input: "+ value);
+		return logs;
 	}
 
 	private void temp() {
@@ -182,10 +253,11 @@ public class KNNAlgo {
 			}
 
 		}
-		if(topic.equals(test))
+		if (topic.equals(test))
 			corect_hamming++;
-		//System.out.println("result :" + topic + "  output: " + test);
+		// System.out.println("result :" + topic + "  output: " + test);
 	}
+
 	private void getClassTypeByEuclid(ArrayList<Distance> disList, String test) {
 		HashMap<String, Integer> maps = new HashMap<String, Integer>();
 		ArrayList<String> list = new ArrayList<String>();
@@ -208,8 +280,34 @@ public class KNNAlgo {
 			}
 
 		}
-		if(topic.equals(test))
+		if (topic.equals(test))
 			corect_euclid++;
+		// System.out.println("result :" + topic + "  output: " + test);
+	}
+	private void getClassTypeByCosine(ArrayList<Distance> disList, String test) {
+		HashMap<String, Integer> maps = new HashMap<String, Integer>();
+		ArrayList<String> list = new ArrayList<String>();
+
+		for (int i = 0; i < 5; i++) {
+			if (maps.containsKey(disList.get(i).getTopic())) {
+				int val = maps.get(disList.get(i).getTopic());
+				maps.put(disList.get(i).getTopic(), val + 1);
+			} else {
+				list.add(disList.get(i).getTopic());
+				maps.put(disList.get(i).getTopic(), 0);
+			}
+		}
+		int MAX = -1;
+		String topic = "";
+		for (int i = 0; i < list.size(); i++) {
+			if (maps.get(list.get(i)) > MAX) {
+				MAX = maps.get(list.get(i));
+				topic = list.get(i);
+			}
+
+		}
+		if (topic.equals(test))
+			corect_cosine++;
 		//System.out.println("result :" + topic + "  output: " + test);
 	}
 
