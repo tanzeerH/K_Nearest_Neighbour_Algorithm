@@ -26,6 +26,7 @@ public class KNNAlgo {
 	private ArrayList<String> test_docTopicList;
 	
 	private int corect_hamming=0;
+	private int corect_euclid=0;
 
 	public KNNAlgo() {
 
@@ -55,42 +56,59 @@ public class KNNAlgo {
 			for (int t_doc = 0; t_doc < train_size; t_doc++) {
 
 				int words = test_docWordList.get(docIndex).size();
-				int dis = 0;
+				int dis_hamming = 0;
+				int dis_euclidian=0;
 				for (int i = 0; i < words; i++) {
 					String key = test_docWordList.get(docIndex).get(i);
+					int occur=test_hashList.get(docIndex).get(key);
 
 					if (train_hashList.get(t_doc).containsKey(key)) {
-
+						int frq=train_hashList.get(t_doc).get(key);
+						dis_euclidian+=Math.pow((occur-frq), 2);
 					} else
-						dis++;
+					{
+						dis_hamming++;
+						dis_euclidian+=Math.pow(occur, 2);
+					}
 				}
 
 				words = train_docWordList.get(t_doc).size();
 
 				for (int i = 0; i < words; i++) {
 					String key = train_docWordList.get(t_doc).get(i);
-
+					int occur=train_hashList.get(t_doc).get(key);
 					if (test_hashList.get(docIndex).containsKey(key)) {
-
+						int frq=test_hashList.get(docIndex).get(key);
+						dis_euclidian+=Math.pow((occur-frq), 2);
 					} else
-						dis++;
+					{
+						dis_hamming++;
+						dis_euclidian+=Math.pow(occur, 2);
+					}
 				}
 
 				// System.out.println("dstance: "+ dis+"  doc: "+
 				// docTopicList_train.get(t_doc));
 				Distance distance = new Distance(train_docTopicList.get(t_doc),
-						dis);
+						dis_hamming,dis_euclidian);
 				disList.add(distance);
 
 			}
-			Collections.sort(disList, new DistanceComparator());
+			//Collections.sort(disList, new DistanceComparatorByHamming());
 
-			getClassType(disList, test_docTopicList.get(docIndex));
+			//getClassTypeByHamming(disList, test_docTopicList.get(docIndex));
+			
+			Collections.sort(disList, new DistanceComparatorByEuclidian());
+
+			getClassTypeByEuclid(disList, test_docTopicList.get(docIndex));
+			
 
 			
 
 		}
-		System.out.println("Cooerct: "+corect_hamming+"  total: "+ test_docTopicList.size());
+		//System.out.println("Cooerct Hamming: "+corect_hamming+"  total: "+ test_docTopicList.size());
+		
+		System.out.println("Cooerct Euclidian: "+corect_euclid+"  total: "+ test_docTopicList.size());
 
 	}
 
@@ -142,7 +160,7 @@ public class KNNAlgo {
 
 	}
 
-	private void getClassType(ArrayList<Distance> disList, String test) {
+	private void getClassTypeByHamming(ArrayList<Distance> disList, String test) {
 		HashMap<String, Integer> maps = new HashMap<String, Integer>();
 		ArrayList<String> list = new ArrayList<String>();
 
@@ -166,6 +184,32 @@ public class KNNAlgo {
 		}
 		if(topic.equals(test))
 			corect_hamming++;
+		//System.out.println("result :" + topic + "  output: " + test);
+	}
+	private void getClassTypeByEuclid(ArrayList<Distance> disList, String test) {
+		HashMap<String, Integer> maps = new HashMap<String, Integer>();
+		ArrayList<String> list = new ArrayList<String>();
+
+		for (int i = 0; i < 5; i++) {
+			if (maps.containsKey(disList.get(i).getTopic())) {
+				int val = maps.get(disList.get(i).getTopic());
+				maps.put(disList.get(i).getTopic(), val + 1);
+			} else {
+				list.add(disList.get(i).getTopic());
+				maps.put(disList.get(i).getTopic(), 0);
+			}
+		}
+		int MAX = -1;
+		String topic = "";
+		for (int i = 0; i < list.size(); i++) {
+			if (maps.get(list.get(i)) > MAX) {
+				MAX = maps.get(list.get(i));
+				topic = list.get(i);
+			}
+
+		}
+		if(topic.equals(test))
+			corect_euclid++;
 		//System.out.println("result :" + topic + "  output: " + test);
 	}
 
