@@ -1,0 +1,9 @@
+Cooerct Hamming K1: 2172  total: 2572
+Cooerct Hamming k3: 2177  total: 2572
+Cooerct Hamming k5: 2172  total: 2572
+Cooerct Euclidian K1: 2076  total: 2572
+Cooerct Euclidian k3: 2106  total: 2572
+Cooerct Euclidian k5: 2098  total: 2572
+Cooerct Cosine Similarity K1: 1898  total: 2572
+Cooerct Cosine Similarity k3: 2028  total: 2572
+Cooerct Cosine Similarity k5: 2113  total: 2572
