@@ -11,11 +11,14 @@ import java.util.HashMap;
 public class TrainStructure {
 
 	private int TOTAL_DOC = 0;
-	private HashMap<String, Integer> wordMap = new HashMap<String, Integer>();
+	/*private HashMap<String, Integer> wordMap = new HashMap<String, Integer>();
 	private ArrayList<ArrayList<Integer>> fetvectorList = new ArrayList<ArrayList<Integer>>();
 	private ArrayList<String> wordList = new ArrayList<String>();
-	private ArrayList<String> docTopicList=new ArrayList<String>();
+	private ArrayList<String> docTopicList = new ArrayList<String>();*/
 	
+	private ArrayList<HashMap<String, Integer>> hashList=new ArrayList<HashMap<String,Integer>>();
+	private ArrayList<ArrayList<String>>  docWordList=new ArrayList<ArrayList<String>>();
+	private ArrayList<String> docTopicList = new ArrayList<String>();
 	
 	public int getTOTAL_DOC() {
 		return TOTAL_DOC;
@@ -25,7 +28,7 @@ public class TrainStructure {
 		TOTAL_DOC = tOTAL_DOC;
 	}
 
-	public HashMap<String, Integer> getWordMap() {
+	/*public HashMap<String, Integer> getWordMap() {
 		return wordMap;
 	}
 
@@ -56,7 +59,7 @@ public class TrainStructure {
 	public void setDocTopicList(ArrayList<String> docTopicList) {
 		this.docTopicList = docTopicList;
 	}
-
+*/
 	public TrainStructure() {
 		System.out.println("Train:\n\n");
 		readFileForCount();
@@ -140,6 +143,10 @@ public class TrainStructure {
 				} else {
 					if (prevNewLine >= 2) {
 						docIndex++;
+						HashMap<String,Integer> hash=new HashMap<String, Integer>();
+						ArrayList<String> list=new ArrayList<String>();
+						docWordList.add(list);
+						hashList.add(hash);
 						// System.out.println("" + count);
 						// isNewDoc=true;
 					}
@@ -147,6 +154,10 @@ public class TrainStructure {
 				}
 				if (count == 0) {
 					docIndex = 0;
+					HashMap<String,Integer> hash=new HashMap<String, Integer>();
+					hashList.add(hash);
+					ArrayList<String> list=new ArrayList<String>();
+					docWordList.add(list);
 					// isNewDoc=true;
 				}
 				// System.out.println(sCurrentLine);
@@ -163,7 +174,20 @@ public class TrainStructure {
 					String[] values = sCurrentLine.split("\\s+");
 
 					for (int i = 0; i < values.length; i++) {
-						if (wordMap.containsKey(values[i])) {
+						HashMap<String,Integer> hash=hashList.get(docIndex);
+						if(hash.containsKey(values[i]))
+						{
+							int val=hash.get(values[i]);
+						     hash.put(values[i],val+1);
+						}
+						else
+						{
+							hash.put(values[i],1);
+							ArrayList<String> list=docWordList.get(docIndex);
+							list.add(values[i]);
+						}
+						
+						/*if (wordMap.containsKey(values[i])) {
 							int wordIndex = wordMap.get(values[i]);
 							ArrayList<Integer> vList = fetvectorList
 									.get(wordIndex);
@@ -175,7 +199,7 @@ public class TrainStructure {
 							ArrayList<Integer> vList = getArraListsWithInitialization();
 							vList.set(docIndex, vList.get(docIndex) + 1);
 							fetvectorList.add(vList);
-						}
+						}*/
 					}
 				}
 
@@ -191,10 +215,41 @@ public class TrainStructure {
 			}
 		}
 		System.out.println("Doc Index:"+docIndex);
-		System.out.println("Word Map size: " + wordMap.size()
+		/*System.out.println("Word Map size: " + wordMap.size()
 				+ " wordList size: " + wordList.size() + " fetList size: "
-				+ fetvectorList.size());
+				+ fetvectorList.size());*/
+		
+		System.out.println("DocWordList Size: "+ docWordList.size());
+		
+		/*for(int i=0;i<100;i++)
+		{
+			System.out.println("hash size:"+ hashList.get(i).size() + " wordList size: "+ docWordList.get(i).size());
+		}*/
 
+	}
+
+	public ArrayList<HashMap<String, Integer>> getHashList() {
+		return hashList;
+	}
+
+	public void setHashList(ArrayList<HashMap<String, Integer>> hashList) {
+		this.hashList = hashList;
+	}
+
+	public ArrayList<ArrayList<String>> getDocWordList() {
+		return docWordList;
+	}
+
+	public void setDocWordList(ArrayList<ArrayList<String>> docWordList) {
+		this.docWordList = docWordList;
+	}
+
+	public ArrayList<String> getDocTopicList() {
+		return docTopicList;
+	}
+
+	public void setDocTopicList(ArrayList<String> docTopicList) {
+		this.docTopicList = docTopicList;
 	}
 	
 
