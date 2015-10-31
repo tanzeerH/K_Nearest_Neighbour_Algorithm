@@ -23,7 +23,7 @@ public class TestStructure {
 
 	public TestStructure() {
 		System.out.println("test:\n\n");
-		readFileForCount();
+		//readFileForCount();
 		
 		// createArraListsWithInitialization();
 		readFileForParsing();
@@ -109,6 +109,8 @@ public class TestStructure {
 						ArrayList<String> list=new ArrayList<String>();
 						docWordList.add(list);
 						hashList.add(hash);
+						TOTAL_DOC++;
+						docTopicList.add(sCurrentLine);
 						// System.out.println("" + count);
 						// isNewDoc=true;
 					}
@@ -120,6 +122,8 @@ public class TestStructure {
 					hashList.add(hash);
 					ArrayList<String> list=new ArrayList<String>();
 					docWordList.add(list);
+					docTopicList.add(sCurrentLine);
+					TOTAL_DOC++;
 					// isNewDoc=true;
 				}
 				// System.out.println(sCurrentLine);

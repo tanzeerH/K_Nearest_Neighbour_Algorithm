@@ -65,7 +65,7 @@ public class TrainStructure {
 	 */
 	public TrainStructure() {
 		System.out.println("Train:\n\n");
-		readFileForCount();
+		//readFileForCount();
 
 		// createArraListsWithInitialization();
 		readFileForParsing();
@@ -150,6 +150,8 @@ public class TrainStructure {
 						ArrayList<String> list = new ArrayList<String>();
 						docWordList.add(list);
 						hashList.add(hash);
+						docTopicList.add(sCurrentLine);
+						TOTAL_DOC++;
 						// System.out.println("" + count);
 						// isNewDoc=true;
 					}
@@ -161,6 +163,8 @@ public class TrainStructure {
 					hashList.add(hash);
 					ArrayList<String> list = new ArrayList<String>();
 					docWordList.add(list);
+					docTopicList.add(sCurrentLine);
+					TOTAL_DOC++;
 					// isNewDoc=true;
 				}
 				// System.out.println(sCurrentLine);
