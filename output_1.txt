@@ -1,9 +1,9 @@
-Cooerct Hamming K1: 2172  total: 2572
-Cooerct Hamming k3: 2177  total: 2572
-Cooerct Hamming k5: 2172  total: 2572
-Cooerct Euclidian K1: 2076  total: 2572
-Cooerct Euclidian k3: 2106  total: 2572
-Cooerct Euclidian k5: 2098  total: 2572
-Cooerct Cosine Similarity K1: 1898  total: 2572
-Cooerct Cosine Similarity k3: 2028  total: 2572
-Cooerct Cosine Similarity k5: 2113  total: 2572
+Cooerct Hamming K1: 2172  total: 2572 percentage: 84.44790046656298%
+Cooerct Hamming k3: 2177  total: 2572 percentage: 84.64230171073095%
+Cooerct Hamming k5: 2172  total: 2572 percentage: 84.44790046656298%
+Cooerct Euclidian K1: 2076  total: 2572 percentage: 80.7153965785381%
+Cooerct Euclidian k3: 2106  total: 2572 percentage: 81.88180404354588%
+Cooerct Euclidian k5: 2098  total: 2572 percentage: 81.57076205287714%
+Cooerct Cosine Similarity K1: 1898  total: 2572 percentage: 73.79471228615864%
+Cooerct Cosine Similarity k3: 2028  total: 2572 percentage: 78.84914463452566%
+Cooerct Cosine Similarity k5: 2113  total: 2572 percentage: 82.15396578538102%

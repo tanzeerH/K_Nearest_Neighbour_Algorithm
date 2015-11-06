@@ -214,51 +214,51 @@ public class KNNAlgo {
 			BufferedWriter bw = new BufferedWriter(fw);
 			//writing results
 			
-			String str="Cooerct Hamming K1: " + corect_hamming_k1
-					+ "  total: " + test_docTopicList.size();
+			String str="Correct Hamming K1: " + corect_hamming_k1
+					+ "  total: " + test_docTopicList.size()+" percentage: "+((double)corect_hamming_k1/(double)test_docTopicList.size())*100+"%";
 			System.out.println(str);
 			bw.write(str+"\n");
 			
-			str="Cooerct Hamming k3: " + corect_hamming_k3
-			+ "  total: " + test_docTopicList.size();
+			str="Correct Hamming k3: " + corect_hamming_k3
+			+ "  total: " + test_docTopicList.size()+" percentage: "+((double)corect_hamming_k3/(double)test_docTopicList.size())*100+"%";
 			System.out.println(str);
 			bw.write(str+"\n");
 			
-			str="Cooerct Hamming k5: " + corect_hamming_k5
-			+ "  total: " + test_docTopicList.size();
+			str="Correct Hamming k5: " + corect_hamming_k5
+			+ "  total: " + test_docTopicList.size()+" percentage: "+((double)corect_hamming_k5/(double)test_docTopicList.size())*100+"%";
 			System.out.println(str);
 			bw.write(str+"\n");
 			
 
-			 str="Cooerct Euclidian K1: " + corect_euclid_k1
-					+ "  total: " + test_docTopicList.size();
+			 str="Correct Euclidian K1: " + corect_euclid_k1
+					+ "  total: " + test_docTopicList.size()+" percentage: "+((double)corect_euclid_k1/(double)test_docTopicList.size())*100+"%";
 			 System.out.println(str);
 			 bw.write(str+"\n");
 			
-			str="Cooerct Euclidian k3: " + corect_euclid_k3
-			+ "  total: " + test_docTopicList.size();
+			str="Correct Euclidian k3: " + corect_euclid_k3
+			+ "  total: " + test_docTopicList.size()+" percentage: "+((double)corect_euclid_k3/(double)test_docTopicList.size())*100+"%";
 			System.out.println(str);
 			bw.write(str+"\n");
 			
-			str="Cooerct Euclidian k5: " + corect_euclid_k5
-			+ "  total: " + test_docTopicList.size();
+			str="Correct Euclidian k5: " + corect_euclid_k5
+			+ "  total: " + test_docTopicList.size()+" percentage: "+((double)corect_euclid_k5/(double)test_docTopicList.size())*100+"%";
 			System.out.println(str);
 			bw.write(str+"\n");
 			
 			
 
-			str="Cooerct Cosine Similarity K1: " + corect_cosine_k1
-					+ "  total: " + test_docTopicList.size();
+			str="Correct Cosine Similarity K1: " + corect_cosine_k1
+					+ "  total: " + test_docTopicList.size()+" percentage: "+((double)corect_cosine_k1/(double)test_docTopicList.size())*100+"%";
 			System.out.println(str);
 			bw.write(str+"\n");
 			
-			str="Cooerct Cosine Similarity k3: " + corect_cosine_k3
-			+ "  total: " + test_docTopicList.size();
+			str="Correct Cosine Similarity k3: " + corect_cosine_k3
+			+ "  total: " + test_docTopicList.size()+" percentage: "+((double)corect_cosine_k3/(double)test_docTopicList.size())*100+"%";
 			System.out.println(str);
 			bw.write(str+"\n");
 			
-			str="Cooerct Cosine Similarity k5: " + corect_cosine_k5
-			+ "  total: " + test_docTopicList.size();
+			str="Correct Cosine Similarity k5: " + corect_cosine_k5
+			+ "  total: " + test_docTopicList.size()+" percentage: "+((double)corect_cosine_k5/(double)test_docTopicList.size())*100+"%";
 			System.out.println(str);
 			bw.write(str+"\n");
 			
